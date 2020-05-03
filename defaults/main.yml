@@ -1,0 +1,15 @@
+# node_exporter variables
+node_exporter_version: "0.18.1"
+node_exporter_upgrade: False
+
+# node_exporter variables used for download and install
+tmp_dir_file: "/tmp/node_exporter_download"
+dest_dir_file: "/bin"
+
+# node_export configuration variables
+node_exporter_port: "9100"
+node_exporter_address: "0.0.0.0"
+node_exporter_metric_path: "/metrics"
+node_exporter_max_requests: "40"
+node_exporter_disable_exporter_metrics: True
+

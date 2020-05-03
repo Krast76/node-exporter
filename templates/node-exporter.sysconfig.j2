@@ -1,0 +1,8 @@
+{% set node_exporter_parameters = [] %}
+{% if node_exporter_disable_exporter_metrics %}
+{% set _ = node_exporter_parameters.append("--web.disable-exporter-metrics") %}
+{% endif %}
+{% set _ = node_exporter_parameters.append("--web.listen-address="+node_exporter_address+":"+node_exporter_port) %}
+{% set _ = node_exporter_parameters.append("--web.telemetry-path="+node_exporter_metric_path) %}
+{% set _ = node_exporter_parameters.append("--web.max-requests="+node_exporter_max_requests) %}
+OPTIONS="{{ node_exporter_parameters | join(' ') }}"

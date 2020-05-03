@@ -1,0 +1,60 @@
+- name: "Include OS family vars"
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: "Create node_exporter user"
+  user:
+   name: "node_exporter"
+   shell: "/sbin/nologin"
+
+- name: "Check if node_exporter is already installed"
+  stat:
+    path: "{{ dest_dir_file }}/node_exporter"
+  register: node_exporter_is_installed
+
+- block:
+    - name: "Create download dir for node_exporter"
+      file: 
+        path: "{{ tmp_dir_file }}"
+        state: directory
+       
+    - name: "Download node exporter"
+      unarchive:
+        src: https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.{{ ansible_system | lower }}-amd64.tar.gz
+        dest: "{{ tmp_dir_file }}"
+        remote_src: yes
+
+    - name: "Copy node_exporter_to the path's dir"
+      copy:
+        src: "{{ tmp_dir_file }}/node_exporter-{{ node_exporter_version }}.{{ ansible_system | lower }}-amd64/node_exporter"
+        dest: "{{ dest_dir_file }}/node_exporter"
+        mode: 0740
+        owner: node_exporter
+        remote_src: yes
+
+    - name: "Create download dir for node_exporter"
+      file: 
+        path: "{{ tmp_dir_file }}"
+        state: absent
+  when: (not node_exporter_is_installed.stat.exists) or node_exporter_upgrade
+
+- name: "Install node-exporter config"
+  template:
+    src: "node-exporter.sysconfig.j2"
+    dest: "/etc/{{ config_path }}/node_exporter"
+  notify: "Restart node_exporter"
+
+- name: "Install Systemd unit for node-exporter"
+  template:
+    src: node-exporter.service.j2
+    dest: /usr/lib/systemd/system/node-exporter.service
+    owner: root
+    mode: 0644
+  notify: 
+    - "Systemd daemon-reloads"
+    - "Restart node_exporter"
+
+- name: "Start and enable node_exporter"
+  systemd:
+    name: node-exporter
+    state: started
+    enabled: true

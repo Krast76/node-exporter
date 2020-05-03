@@ -1,0 +1,8 @@
+[Unit]
+Description="Systemd unit for Prometheus node-exporter"
+After=network.target
+
+[Service]
+User=node_exporter
+EnvironmentFile=/etc/{{ config_path }}/node_exporter
+ExecStart={{ dest_dir_file }}/node_exporter $OPTIONS

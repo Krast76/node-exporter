@@ -5,4 +5,7 @@
 {% set _ = node_exporter_parameters.append("--web.listen-address="+node_exporter_address+":"+node_exporter_port) %}
 {% set _ = node_exporter_parameters.append("--web.telemetry-path="+node_exporter_metric_path) %}
 {% set _ = node_exporter_parameters.append("--web.max-requests="+node_exporter_max_requests) %}
+{% if node_exporter_tls_config is defined or node_exporter_users is defined %}
+{% set _ = node_exporter_parameters.append("--web.config=/etc/prometheus/web-config.yml") %}
+{% endif %}
 OPTIONS="{{ node_exporter_parameters | join(' ') }}"

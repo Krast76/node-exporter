@@ -6,10 +6,25 @@ node_exporter_upgrade: False
 tmp_dir_file: "/tmp/node_exporter_download"
 dest_dir_file: "/bin"
 
-# node_export configuration variables
+# node_exporter configuration variables
 node_exporter_port: "9100"
 node_exporter_address: "0.0.0.0"
 node_exporter_metric_path: "/metrics"
 node_exporter_max_requests: "40"
 node_exporter_disable_exporter_metrics: True
+
+# node_exporter HTTPS Package for Prometheus
+
+# Enable TLS config
+# node_exporter_tls_config:
+#   client_auth_type: NoClientCert
+#   min_version: "TLS12"
+#   max_version: "TLS13"
+
+# Manage protocol
+node_exporter_http2_enabled: True
+
+# http authentication
+# Should be hashed with bcrypt
+# node_exporter_users:
 

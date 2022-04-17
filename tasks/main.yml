@@ -53,6 +53,21 @@
     - "Systemd daemon-reloads"
     - "Restart node_exporter"
 
+- block:
+    - name: "Create /etc/prometheus dir"
+      file:
+        path: "/etc/prometheus"
+        state: directory
+        owner: root
+        group: root
+
+    - name: "Copy web-config"
+      template:
+        src: "web-config.yml.j2"
+        dest: "/etc/prometheus/web-config.yml"
+  when: node_exporter_tls_config is defined or node_exporter_users is defined
+
+
 - name: "Start and enable node_exporter"
   systemd:
     name: node-exporter

@@ -1,0 +1,10 @@
+{% if node_exporter_tls_config is defined %}
+tls_server_config: {{ node_exporter_tls_config }}
+{% endif %}
+
+http_server_config:
+  http2: {{ node_exporter_http2_enabled }}
+
+{% if node_exporter_users is defined %}
+basic_auth_users: {{ node_exporter_users }}
+{% endif %}
